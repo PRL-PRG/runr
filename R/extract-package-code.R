@@ -292,7 +292,7 @@ is_testthat_driver <- Vectorize(function(file) {
       endsWith(file_lower, "run-all.r"))
 })
 
-#' @importFrom stringr str_replace
+#' @importFrom stringr str_replace fixed
 #' @importFrom magrittr %>%
 #' @export
 wrap_using_template <- function(template) {
