@@ -19,6 +19,11 @@ extract_package_code <- function(pkg, pkg_dir = find.package(pkg),
     dir.create(output_dir, recursive = TRUE)
   }
   output_dir <- normalizePath(output_dir, mustWork = TRUE)
+  # On Windows normalizePath() returns backslashes, but every path derived from
+  # output_dir below is assembled with file.path(), which joins with '/'. That
+  # leaves mixed separators that neither match cloc's output nor each other, so
+  # settle on '/' here and keep it for the rest of the function.
+  output_dir <- gsub("\\", "/", output_dir, fixed = TRUE)
 
   if ("all" %in% types) {
     types <- c("examples", "tests", "vignettes")
@@ -62,8 +67,12 @@ extract_package_code <- function(pkg, pkg_dir = find.package(pkg),
   df <- purrr::imap_dfr(extracted_files, ~ tibble::tibble(file = .x, type = .y))
 
   if (compute_sloc) {
+    # cloc picks its own separator, so bring its paths onto the same convention
+    # as output_dir. Without this the joins below silently miss and every count
+    # comes out 0.
     sloc_all <- cloc(output_dir, by_file = TRUE, r_only = TRUE) %>%
-      rename(file = filename)
+      rename(file = filename) %>%
+      mutate(file = gsub("\\", "/", file, fixed = TRUE))
 
     sloc <- left_join(df, sloc_all, by = "file") %>%
       mutate(
@@ -72,9 +81,8 @@ extract_package_code <- function(pkg, pkg_dir = find.package(pkg),
         code = ifelse(is.na(code), 0, code)
       )
 
-    # output_dir is spliced into the regexes below as a literal prefix. On
-    # Windows it holds backslashes, which ICU reads as escape sequences and
-    # rejects, so quote it before it reaches a pattern.
+    # output_dir is spliced into the regexes below as a literal prefix, so quote
+    # it: unescaped separators would be read as regex escape sequences.
     output_re <- str_escape(output_dir)
 
     sloc_testthat <-
