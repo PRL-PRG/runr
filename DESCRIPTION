@@ -29,7 +29,7 @@ Imports:
     remotes,
     rex,
     stats,
-    stringr,
+    stringr (>= 1.5.0),
     testthat,
     tibble,
     tools,

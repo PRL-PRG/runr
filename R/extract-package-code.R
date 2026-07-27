@@ -3,7 +3,7 @@
 #'   content. If it is a file it case use the {body}, {package}, {type}, {file} placeholders.
 #' @importFrom dplyr select mutate filter vars bind_rows rename anti_join left_join ends_with `%>%`
 #' @importFrom purrr keep imap_dfr
-#' @importFrom stringr str_replace str_sub
+#' @importFrom stringr str_c str_escape str_replace str_sub
 #' @importFrom tibble tibble
 #' @export
 extract_package_code <- function(pkg, pkg_dir = find.package(pkg),
@@ -72,11 +72,16 @@ extract_package_code <- function(pkg, pkg_dir = find.package(pkg),
         code = ifelse(is.na(code), 0, code)
       )
 
+    # output_dir is spliced into the regexes below as a literal prefix. On
+    # Windows it holds backslashes, which ICU reads as escape sequences and
+    # rejects, so quote it before it reaches a pattern.
+    output_re <- str_escape(output_dir)
+
     sloc_testthat <-
       sloc_all %>%
-      filter(str_detect(file, file.path(output_dir, "tests/testthat/test.*\\.[rR]$"))) %>%
+      filter(str_detect(file, str_c(output_re, "/tests/testthat/test.*\\.[rR]$"))) %>%
       mutate(
-        test_name = str_replace(file, file.path(output_dir, "tests/testthat/(test.*)\\.[rR]$"), "\\1")
+        test_name = str_replace(file, str_c(output_re, "/tests/testthat/(test.*)\\.[rR]$"), "\\1")
       )
 
     df <- if (nrow(sloc_testthat) > 0) {
@@ -84,7 +89,7 @@ extract_package_code <- function(pkg, pkg_dir = find.package(pkg),
         filter(sloc, type == "tests") %>%
         mutate(
           test_driver = sapply(file, is_testthat_driver),
-          test_name = str_replace(file, file.path(output_dir, "tests/testthat-drv-(.*)\\.[rR]$"), "\\1")
+          test_name = str_replace(file, str_c(output_re, "/tests/testthat-drv-(.*)\\.[rR]$"), "\\1")
         )
 
       sloc_tests_merged <-
