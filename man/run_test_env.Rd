@@ -7,6 +7,12 @@ Based on testthat:::test_pkg_env.}
 \usage{
 run_test_env(package)
 }
+\arguments{
+\item{package}{name of the package whose namespace to expose.}
+}
+\value{
+An environment containing all bindings of the package namespace.
+}
 \description{
 Create a package environment with access to all package functions.
 Based on testthat:::test_pkg_env.

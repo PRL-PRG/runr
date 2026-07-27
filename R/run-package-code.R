@@ -1,6 +1,8 @@
 #' Create a package environment with access to all package functions.
 #' Based on testthat:::test_pkg_env.
-#
+#'
+#' @param package name of the package whose namespace to expose.
+#' @return An environment containing all bindings of the package namespace.
 #' @export
 run_test_env <- function(package) {
   list2env(
@@ -9,9 +11,13 @@ run_test_env <- function(package) {
   )
 }
 
-#' Simpulate test_check ortherwise running test_dir might skip some tests.
+#' Simulate test_check, otherwise running test_dir might skip some tests.
 #' Based on testthat:::test_package_dir.
-#
+#'
+#' @param package name of the package under test.
+#' @param path directory containing the testthat tests.
+#' @param ... passed on to [testthat::test_dir()].
+#' @return The value of [testthat::test_dir()].
 #' @importFrom testthat test_dir
 #' @importFrom withr local_options local_envvar
 #' @export

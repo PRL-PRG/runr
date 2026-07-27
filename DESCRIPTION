@@ -1,5 +1,5 @@
 Package: runr
-Title: Run R experiments
+Title: Run R Experiments
 Version: 0.0.1
 Authors@R:
     person(given = "Filip",
@@ -9,19 +9,32 @@ Authors@R:
            comment = c(ORCID = "0000-0002-0478-6202"))
 Description: Contains a set of helper functions and scripts for running R-related experiments.
 License: MIT + file LICENSE
+URL: https://github.com/PRL-PRG/runr
+BugReports: https://github.com/PRL-PRG/runr/issues
 Encoding: UTF-8
-LazyData: true
-Suggests:
-    testthat
+Depends:
+    R (>= 3.5.0)
 Imports:
     callr,
+    codetools,
+    digest,
     dplyr,
     fs,
+    knitr,
     lubridate,
     magrittr,
+    progress,
     purrr,
     readr,
+    remotes,
+    rex,
+    stats,
     stringr,
+    testthat,
     tibble,
+    tools,
+    utils,
     withr
-RoxygenNote: 7.3.2
+Suggests:
+    rmarkdown
+Config/roxygen2/version: 8.0.0

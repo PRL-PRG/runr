@@ -11,7 +11,16 @@ cloc <- function(path, by_file = FALSE, r_only = FALSE, cloc_bin = "cloc") {
     path
   )
 
-  sloc <- system2(cloc_bin, args, stdout = TRUE)[-1]
+  sloc <- system2(cloc_bin, args, stdout = TRUE)
+
+  # cloc 1.x prints a blank line before the CSV header, cloc 2.x does not, so
+  # locate the header instead of dropping a fixed number of leading lines. The
+  # header is the only row carrying cloc's version banner as a trailing column.
+  header <- grep(',"github.com/AlDanial/cloc', sloc, fixed = TRUE)
+
+  if (length(header) > 0) {
+    sloc <- sloc[header[1]:length(sloc)]
+  }
 
   if (length(sloc) > 1) {
     sloc[1] <- stringr::str_replace(sloc[1], ',"github.com/AlDanial/cloc.*', "")

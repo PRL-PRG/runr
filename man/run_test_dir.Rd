@@ -2,12 +2,22 @@
 % Please edit documentation in R/run-package-code.R
 \name{run_test_dir}
 \alias{run_test_dir}
-\title{Simpulate test_check ortherwise running test_dir might skip some tests.
+\title{Simulate test_check, otherwise running test_dir might skip some tests.
 Based on testthat:::test_package_dir.}
 \usage{
 run_test_dir(package, path, ...)
 }
+\arguments{
+\item{package}{name of the package under test.}
+
+\item{path}{directory containing the testthat tests.}
+
+\item{...}{passed on to [testthat::test_dir()].}
+}
+\value{
+The value of [testthat::test_dir()].
+}
 \description{
-Simpulate test_check ortherwise running test_dir might skip some tests.
+Simulate test_check, otherwise running test_dir might skip some tests.
 Based on testthat:::test_package_dir.
 }

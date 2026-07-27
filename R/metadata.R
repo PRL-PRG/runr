@@ -5,7 +5,7 @@ metadata_functions <- function(package, lib_loc=NULL) {
 
   ns <- getNamespace(package)
   exports <- getNamespaceExports(package)
-  bindings <- ls(env = ns, all.names = TRUE)
+  bindings <- ls(envir = ns, all.names = TRUE)
 
   function_bindings <- sapply(bindings, USE.NAMES = FALSE, function(x) {
     f <- get0(x, envir = ns)

@@ -1,1 +1,8 @@
 ^LICENSE\.md$
+^Makefile$
+^\.github$
+^codecov\.yml$
+^.*\.Rcheck$
+^runr.*\.tar\.gz$
+# stray R session artifact (holds only .Random.seed), not a test fixture
+^tests/testthat/data/stringr/tests/\.RData$
