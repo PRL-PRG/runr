@@ -1,3 +1,15 @@
+#' Inventory of the functions in a package namespace
+#'
+#' Loads `package` and describes every function bound in its namespace,
+#' including the ones it does not export.
+#'
+#' @param package name of the package to inspect.
+#' @param lib_loc library path to load the package from, or `NULL` for the
+#'   current one.
+#' @return A data frame with one row per function and the columns `pkg_name`,
+#'   `fun_name`, `exported`, `is_s3_dispatch` (calls `UseMethod()` or
+#'   `NextMethod()`), `is_s3_method` (registered as an S3 method) and `params`
+#'   (the parameter names, `;`-separated).
 #' @importFrom withr local_libpaths
 #' @export
 metadata_functions <- function(package, lib_loc=NULL) {

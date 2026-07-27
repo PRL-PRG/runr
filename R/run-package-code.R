@@ -1,5 +1,6 @@
-#' Create a package environment with access to all package functions.
-#' Based on testthat:::test_pkg_env.
+#' Create a package environment with access to all package functions
+#'
+#' Based on `testthat:::test_pkg_env`.
 #'
 #' @param package name of the package whose namespace to expose.
 #' @return An environment containing all bindings of the package namespace.
@@ -11,8 +12,10 @@ run_test_env <- function(package) {
   )
 }
 
-#' Simulate test_check, otherwise running test_dir might skip some tests.
-#' Based on testthat:::test_package_dir.
+#' Run a testthat directory the way test_check would
+#'
+#' Simulates `testthat::test_check()`, otherwise [testthat::test_dir()] might
+#' skip some tests. Based on `testthat:::test_package_dir`.
 #'
 #' @param package name of the package under test.
 #' @param path directory containing the testthat tests.
@@ -50,6 +53,21 @@ rcmd_batch_runner <- function(file, out_file, quiet=F) {
   )
 }
 
+#' Run a single R file in a fresh R subprocess
+#'
+#' Runs `file` with the current R build under a fixed environment (`LC_ALL=C`, no
+#' browser, no PDF viewer, sources kept) so that runs are comparable across a
+#' corpus.
+#'
+#' @param file path to the R file to run.
+#' @param out_file where to write the combined stdout and stderr, or `NULL` to
+#'   let it go to the console.
+#' @param cwd run from the file's own directory rather than the current one.
+#' @param quiet do not print the command being run.
+#' @param stats also report the elapsed time, recovered from the trailing
+#'   `proc.time()` in the output.
+#' @return A one-row data frame with the `exitval`, and the elapsed `time` when
+#'   `stats` is `TRUE` (`NA` if the run failed or the timing could not be read).
 #' @export
 run_one <- function(file, out_file, cwd=TRUE, quiet=TRUE, stats=TRUE) {
   stopifnot(file.exists(file))
@@ -136,6 +154,26 @@ run_one <- function(file, out_file, cwd=TRUE, quiet=TRUE, stats=TRUE) {
   }
 }
 
+#' Run every R file under a directory
+#'
+#' Runs each `.R` file with [run_one()]. The individual files under a `testthat/`
+#' directory are skipped, because the extracted testthat drivers run them. By
+#' default the code is copied into a scratch directory first, so the corpus is
+#' left untouched even when `wrap_code_fun` rewrites files.
+#'
+#' @param path directory holding the R files to run.
+#' @param output_dir directory to write the per-file `.out` files to.
+#' @param run_dir scratch directory to copy the code into before running. Pass
+#'   `path` to run in place.
+#' @param filter regexp on file names, or `NULL` to run everything.
+#' @param wrap_code_fun `function(code)` returning the new file contents, applied
+#'   to each file just before it runs.
+#' @param clean remove `run_dir` afterwards.
+#' @param quiet do not report progress.
+#' @param skip_if_out_exists treat a file whose `.out` already exists as done.
+#' @return A data frame with one row per file and the columns `file`, `out_file`,
+#'   `exitval`, `time` and `error` (the message if the file could not be run at
+#'   all, `NA` otherwise).
 #' @importFrom stringr str_detect
 #' @export
 run_all <- function(path, output_dir=getwd(), run_dir=tempfile(), filter=NULL,

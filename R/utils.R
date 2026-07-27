@@ -1,3 +1,15 @@
+#' Count lines of code with cloc
+#'
+#' Runs the external `cloc` utility and parses its CSV output.
+#'
+#' @param path directory or file to count.
+#' @param by_file report one row per file rather than one row per language.
+#' @param r_only keep only the rows counting R code.
+#' @param cloc_bin name of, or path to, the `cloc` executable.
+#' @return A tibble with the `blank`, `comment` and `code` counts, identifying
+#'   each row by `filename` when `by_file` is `TRUE` and by `language` and
+#'   `files` otherwise (with the queried `path` prepended as a column), or `NULL`
+#'   if `cloc` reported nothing.
 #' @importFrom readr read_csv
 #' @importFrom tibble add_column
 #' @importFrom dplyr filter
@@ -41,6 +53,12 @@ cloc <- function(path, by_file = FALSE, r_only = FALSE, cloc_bin = "cloc") {
 }
 
 # from: https://stackoverflow.com/a/15373917
+#' Path of the script currently being executed
+#'
+#' Works both under `Rscript` (via `--file=`) and when the file is `source()`d.
+#'
+#' @return The normalised path of the running script, or `NULL` if it cannot be
+#'   determined (for instance in an interactive session).
 #' @export
 current_script <- function() {
   args <- commandArgs(trailingOnly = FALSE)
@@ -60,6 +78,11 @@ current_script <- function() {
   }
 }
 
+#' Does a function dispatch on S3?
+#'
+#' @param fun the function to inspect.
+#' @return `TRUE` if `fun` calls `UseMethod()` or `NextMethod()`, i.e. if it is
+#'   an S3 generic or an S3 method that delegates further.
 #' @importFrom codetools findGlobals
 #' @export
 is_s3_dispatch_method <- function(fun) {
@@ -67,6 +90,10 @@ is_s3_dispatch_method <- function(fun) {
   any(globals == "UseMethod" | globals == "NextMethod")
 }
 
+#' SHA1 digest of a file's contents
+#'
+#' @param file path to the file to hash.
+#' @return The SHA1 digest of the file contents, as a string.
 #' @importFrom digest sha1
 #' @export
 file_sha1 <- function(file) {
@@ -74,6 +101,11 @@ file_sha1 <- function(file) {
   digest::sha1(code)
 }
 
+#' Read a whole file into a single string
+#'
+#' @param filename path to the file to read.
+#' @return The file contents as a length-one character vector, newlines
+#'   included.
 #' @export
 read_file <- function(filename) {
   readChar(filename, file.info(filename)$size)

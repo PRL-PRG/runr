@@ -1,3 +1,22 @@
+#' Run an R file with a specific R build
+#'
+#' Runs `file` in a subprocess started from `r_home`, from the file's own
+#' directory. Use this rather than [run_one()] when the experiment is about a
+#' particular R build or library; `callr` cannot be told which R to use.
+#'
+#' @param file path to the R file to run.
+#' @param timeout kill the process after this many seconds.
+#' @param r_envir named character vector of environment variables to set.
+#' @param r_args command line arguments passed to R.
+#' @param r_home the `R_HOME` of the R installation to run.
+#' @param lib_path library to run against, exported as `R_LIBS`, or `NULL` to
+#'   inherit the default.
+#' @param keep_output whether to return the captured output `"always"`,
+#'   `"never"`, or only `"on_error"`.
+#' @param quiet unused, kept for symmetry with the other runners.
+#' @return A one-row tibble with `file`, the exit `status`, the `elapsed` time in
+#'   seconds and the combined stdout/stderr `output` (`NA` when `keep_output`
+#'   suppresses it).
 #' @importFrom withr with_dir
 #' @importFrom tibble tibble
 #' @export

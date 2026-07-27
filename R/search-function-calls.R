@@ -1,5 +1,12 @@
+#' Find calls to given functions in an expression
+#'
+#' Walks `expr` recursively and collects the calls to any of `functions`,
+#' matching both the bare name (`fun(...)`) and the namespace-qualified forms
+#' (`pkg::fun(...)` and `pkg:::fun(...)`).
+#'
 #' @param expr is the expression in which run the search
 #' @param functions is a string vector in the form of package:::function_name
+#' @return A list of the matching calls, or `NULL` if there are none.
 #' @importFrom stringr str_replace str_c
 #' @export
 #'

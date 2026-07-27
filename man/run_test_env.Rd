@@ -2,8 +2,7 @@
 % Please edit documentation in R/run-package-code.R
 \name{run_test_env}
 \alias{run_test_env}
-\title{Create a package environment with access to all package functions.
-Based on testthat:::test_pkg_env.}
+\title{Create a package environment with access to all package functions}
 \usage{
 run_test_env(package)
 }
@@ -14,6 +13,5 @@ run_test_env(package)
 An environment containing all bindings of the package namespace.
 }
 \description{
-Create a package environment with access to all package functions.
-Based on testthat:::test_pkg_env.
+Based on \code{testthat:::test_pkg_env}.
 }

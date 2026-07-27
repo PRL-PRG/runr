@@ -1,3 +1,22 @@
+#' Install CRAN packages into a dedicated library
+#'
+#' Installs the packages that are missing from `lib_dir` in a separate R
+#' process, keeping tests and source references so that the installed copies can
+#' be used for experiments.
+#'
+#' @param packages names of the packages to install, or `NULL` for every package
+#'   available from `mirror`.
+#' @param lib_dir library to install into, created if needed. `NULL` uses the
+#'   default library.
+#' @param r_home the `R_HOME` of the R installation to install with.
+#' @param dest_dir directory to keep the downloaded sources in, created if
+#'   needed.
+#' @param mirror CRAN mirror to install from.
+#' @param force install even the packages that are already present.
+#' @param dependencies passed to [utils::install.packages()].
+#' @param check also reinstall packages that are installed but fail to load.
+#' @param install_opts options passed to `R CMD INSTALL`.
+#' @param n_cpus number of parallel installation jobs.
 #' @importFrom callr r
 #' @return The paths to `packages`. This might be a subset of
 #' the requested packages, if some packages failed to install.

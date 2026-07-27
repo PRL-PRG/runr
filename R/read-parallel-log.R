@@ -1,3 +1,12 @@
+#' Read a GNU parallel job log
+#'
+#' @param path the `--joblog` file itself, or a directory containing a
+#'   `parallel.log`.
+#' @return A tibble of the log with lower-cased column names: `seq`, `host`,
+#'   `starttime` (a datetime), `jobruntime` (a period), `send`, `receive`,
+#'   `exitval`, `signal` and `command`. Jobs retried with `--retry-failed`
+#'   appear once per attempt; use [read_parallel_results()] to get one row per
+#'   job.
 #' @importFrom dplyr mutate rename_all left_join select everything
 #' @importFrom fs file_exists is_dir path
 #' @importFrom lubridate as_datetime as.period

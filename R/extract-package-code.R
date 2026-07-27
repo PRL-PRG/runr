@@ -1,6 +1,29 @@
-#' @param wrap either a NULL or filename of a function(package, file, type, body) which
-#'   will be called for each extracted file and allows one to alter the file
-#'   content. If it is a file it case use the {body}, {package}, {type}, {file} placeholders.
+#' Extract a package's runnable code into standalone R files
+#'
+#' A package's executable code is not directly runnable: examples live inside
+#' `Rd` files, vignettes inside `Rmd`, and tests behind a `testthat.R` driver.
+#' This writes all of it out as plain `.R` files under `output_dir/<type>/`.
+#'
+#' @param pkg name of the package.
+#' @param pkg_dir the installed package directory to extract from.
+#' @param types which kinds of code to extract; `"all"` selects every kind.
+#' @param output_dir directory to write the extracted files to, created if
+#'   needed.
+#' @param wrap `NULL`, a `function(package, file, type, body)` returning the new
+#'   contents of each extracted file, or the path of a template file. A template
+#'   is turned into such a function by [wrap_using_template()], which substitutes
+#'   the `.PACKAGE.`, `.FILE.`, `.TYPE.` and `.BODY.` placeholders.
+#' @param filter regexp on the extracted file names, or `NULL` to keep all.
+#' @param split_testthat emit one driver per `test_*.R` file instead of a single
+#'   `testthat.R`, so a crashing test file does not take the suite down with it
+#'   and each file gets its own exit code.
+#' @param compute_sloc also count lines of code, which requires `cloc`.
+#' @param quiet do not report progress.
+#' @return A tibble with one row per extracted file: `file`, relative to
+#'   `output_dir`, and `type`. When `compute_sloc` is `TRUE` the `blank`,
+#'   `comment` and `code` counts of the code the file came from are included, so
+#'   for a testthat driver they describe the test file it runs rather than the
+#'   driver itself.
 #' @importFrom dplyr select mutate filter vars bind_rows rename anti_join left_join ends_with `%>%`
 #' @importFrom purrr keep imap_dfr
 #' @importFrom stringr str_c str_escape str_replace str_sub
@@ -305,6 +328,15 @@ is_testthat_driver <- Vectorize(function(file) {
       endsWith(file_lower, "run-all.r"))
 })
 
+#' Build a wrapper function from a template
+#'
+#' Turns a template string into the `function(package, file, type, body)` that
+#' [extract_package_code()] and [wrap_files()] expect.
+#'
+#' @param template the template. The first occurrence of each of `.PACKAGE.`,
+#'   `.FILE.`, `.TYPE.` and `.BODY.` is replaced with the corresponding argument.
+#' @return A `function(package, file, type, body)` returning the filled-in
+#'   template.
 #' @importFrom stringr str_replace fixed
 #' @importFrom magrittr %>%
 #' @export
@@ -318,6 +350,18 @@ wrap_using_template <- function(template) {
   }
 }
 
+#' Rewrite files in place with a wrapper function
+#'
+#' Vectorised over `file` and `type`. A file that cannot be rewritten is reported
+#' and skipped, so one bad file does not stop the rest.
+#'
+#' @param package name of the package the files came from.
+#' @param file paths of the files to rewrite.
+#' @param type the kind of code each file holds, parallel to `file`.
+#' @param wrap_fun `function(package, file, type, body)` returning the new
+#'   contents, for instance from [wrap_using_template()].
+#' @param quiet do not report each file as it is rewritten.
+#' @return Called for its side effect of rewriting `file`.
 #' @export
 wrap_files <- Vectorize(function(package, file, type, wrap_fun, quiet = TRUE) {
   if (!quiet) {

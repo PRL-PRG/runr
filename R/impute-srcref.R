@@ -1,3 +1,13 @@
+#' Reconstruct source references inside a function
+#'
+#' A function keeps a `srcref` for itself, but not for the expressions in its
+#' body. This recovers those from the parse data of the function's source file,
+#' so that coverage and tracing can attribute results to source locations.
+#'
+#' @param fun the function to annotate. Must have been parsed with
+#'   `keep.source` enabled, otherwise it is returned unchanged.
+#' @return `fun` with `srcref` attributes imputed on the expressions of its
+#'   formals and body.
 #' @export
 impute_fun_srcref <- function(fun) {
   srcref <- attr(fun, "srcref")

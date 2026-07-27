@@ -2,8 +2,7 @@
 % Please edit documentation in R/run-package-code.R
 \name{run_test_dir}
 \alias{run_test_dir}
-\title{Simulate test_check, otherwise running test_dir might skip some tests.
-Based on testthat:::test_package_dir.}
+\title{Run a testthat directory the way test_check would}
 \usage{
 run_test_dir(package, path, ...)
 }
@@ -12,12 +11,12 @@ run_test_dir(package, path, ...)
 
 \item{path}{directory containing the testthat tests.}
 
-\item{...}{passed on to [testthat::test_dir()].}
+\item{...}{passed on to \code{\link[testthat:test_dir]{testthat::test_dir()}}.}
 }
 \value{
-The value of [testthat::test_dir()].
+The value of \code{\link[testthat:test_dir]{testthat::test_dir()}}.
 }
 \description{
-Simulate test_check, otherwise running test_dir might skip some tests.
-Based on testthat:::test_package_dir.
+Simulates \code{testthat::test_check()}, otherwise \code{\link[testthat:test_dir]{testthat::test_dir()}} might
+skip some tests. Based on \code{testthat:::test_package_dir}.
 }
