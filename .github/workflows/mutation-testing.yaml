@@ -1,0 +1,15 @@
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+name: mutation-testing
+
+jobs:
+  mutation:
+    permissions:
+      contents: write # to publish the badge JSON consumed by the README
+    uses: PRL-PRG/mutator/.github/workflows/mutation-testing.yaml@v0.2.1
+    with:
+      target-margin: "0.10"
+      deploy-badge: true
