@@ -2,7 +2,7 @@
 [![R-CMD-check](https://github.com/PRL-PRG/runr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/PRL-PRG/runr/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/PRL-PRG/runr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/PRL-PRG/runr)
 [![r-universe](https://prl-prg.r-universe.dev/runr/badges/version)](https://prl-prg.r-universe.dev/runr)
-[![mutator](https://img.shields.io/endpoint?url=https%3A%2F%2Fprl-prg.github.io%2Frunr%2Fmutation-score.json)](https://github.com/PRL-PRG/runr/actions/workflows/mutation-testing.yaml)
+[![mutator](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FPRL-PRG%2Frunr%2Fgh-pages%2Fmutation-score.json)](https://github.com/PRL-PRG/runr/actions/workflows/mutation-testing.yaml)
 <!-- badges: end -->
 
 # runr
